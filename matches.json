@@ -1,0 +1,38 @@
+[
+  {
+    "competition": "UEFA Champions League",
+    "year": 2011,
+    "round": "GroupH",
+    "team1": "Barcelona",
+    "team2": "AC Milan",
+    "team1goals": "2",
+    "team2goals": "2"
+  },
+  {
+    "competition": "UEFA Champions League",
+    "year": 2011,
+    "round": "GroupH",
+    "team1": "Barcelona",
+    "team2": "Viktoria Plzen",
+    "team1goals": "2",
+    "team2goals": "0"
+  },
+  {
+    "competition": "UEFA Champions League",
+    "year": 2011,
+    "round": "GroupH",
+    "team1": "BATE Borisov",
+    "team2": "Barcelona",
+    "team1goals": "0",
+    "team2goals": "5"
+  },
+  {
+    "competition": "UEFA Champions League",
+    "year": 2011,
+    "round": "GroupH",
+    "team1": "Viktoria Plzen",
+    "team2": "Barcelona",
+    "team1goals": "0",
+    "team2goals": "4"
+  }
+]

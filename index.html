@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SportOrca</title>
+  <!-- Google Fonts Poppins -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #0f0f0f;
+      color: white;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background: #121212;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .logo {
+      font-size: 1.8rem;
+      color: #e50914;
+      font-weight: bold;
+      cursor: default;
+    }
+
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      margin-left: 1.5rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: color 0.3s;
+    }
+
+    nav a:hover {
+      color: #ff80aa;
+    }
+
+    .slideshow {
+      width: 100%;
+      height: 40vh;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .slideshow img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      position: absolute;
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+    }
+
+    .slideshow img.active {
+      opacity: 1;
+      position: relative;
+    }
+
+    #about {
+      padding: 3rem 2rem 1rem;
+      text-align: center;
+      color: #ff80aa;
+      font-family: cursive;
+      font-size: 1.4rem;
+      max-width: 900px;
+      margin: 0 auto 2rem;
+    }
+
+    /* Image cards under About */
+    .about-cards {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 3rem;
+    }
+
+    .about-card {
+      width: 150px;
+      height: 100px;
+      overflow: hidden;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #ff80aa88;
+      cursor: pointer;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .about-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 15px #e50914cc;
+    }
+
+    #matches {
+      padding: 2rem;
+      max-width: 900px;
+      margin: auto;
+      flex-grow: 1;
+    }
+
+    #matches h2 {
+      text-align: center;
+      margin-bottom: 1rem;
+      font-weight: 700;
+      color: #e50914;
+    }
+
+    #matchControls {
+      text-align: center;
+      margin-bottom: 1rem;
+    }
+
+    select,
+    button {
+      padding: 0.5rem 1rem;
+      margin: 0.5rem 0.3rem;
+      border-radius: 4px;
+      border: none;
+      background: #e50914;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 1rem;
+      min-width: 140px;
+      transition: background-color 0.3s ease;
+    }
+
+    select:hover,
+    button:hover {
+      background-color: #ff3860;
+    }
+
+    #matchList {
+      margin-top: 1rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1rem;
+    }
+
+    .match-card {
+      background: #1f1f1f;
+      padding: 1rem;
+      border-left: 5px solid #e50914;
+      border-radius: 8px;
+      box-shadow: 0 0 8px #e50914bb;
+      position: relative;
+      transition: transform 0.3s ease;
+      cursor: default;
+    }
+
+    .match-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0 15px #ff80aa;
+    }
+
+    .match-card strong {
+      font-size: 1.1rem;
+      color: #ff80aa;
+    }
+
+    .match-info {
+      margin: 0.5rem 0;
+      font-size: 0.9rem;
+      color: #ddd;
+    }
+
+    .buy-ticket-btn {
+      margin-top: 0.8rem;
+      background-color: #ff3860;
+      font-weight: 700;
+      border-radius: 4px;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      border: none;
+      color: white;
+      transition: background-color 0.3s ease;
+      display: block;
+      width: fit-content;
+    }
+
+    .buy-ticket-btn:hover {
+      background-color: #e50914;
+    }
+
+    .thanks-msg {
+      margin-top: 0.6rem;
+      color: #32ff7e;
+      font-weight: 600;
+    }
+
+    /* Loading spinner */
+    #loadingSpinner {
+      display: none;
+      margin: 2rem auto;
+      border: 6px solid #f3f3f3;
+      border-top: 6px solid #e50914;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 20;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(3px);
+      justify-content: center;
+      align-items: center;
+      padding: 1rem;
+    }
+
+    .modal-content {
+      background-color: #222;
+      padding: 2rem 2.5rem;
+      border-radius: 10px;
+      max-width: 400px;
+      width: 100%;
+      box-shadow: 0 0 20px #e50914cc;
+      color: white;
+      position: relative;
+    }
+
+    .modal-content h2 {
+      margin-bottom: 1rem;
+      color: #e50914;
+      text-align: center;
+    }
+
+    .modal-content input {
+      padding: 0.6rem;
+      width: 100%;
+      border-radius: 5px;
+      border: none;
+      margin-bottom: 1rem;
+      font-size: 1rem;
+    }
+
+    .modal-content button.submit-btn {
+      background: #e50914;
+      width: 100%;
+      padding: 0.7rem;
+      font-weight: 700;
+      font-size: 1.1rem;
+      border-radius: 5px;
+      border: none;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .modal-content button.submit-btn:hover {
+      background-color: #ff3860;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 12px;
+      right: 15px;
+      font-size: 1.5rem;
+      color: #ff80aa;
+      cursor: pointer;
+      font-weight: 700;
+      transition: color 0.3s;
+    }
+
+    .close-btn:hover {
+      color: #e50914;
+    }
+
+    /* Responsive */
+    @media screen and (max-width: 768px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      nav {
+        margin-top: 1rem;
+        width: 100%;
+        display: flex;
+        justify-content: space-around;
+      }
+
+      nav a {
+        margin: 0;
+      }
+
+      #about {
+        font-size: 1.2rem;
+        padding: 2rem 1rem 1rem;
+      }
+
+      #matchList {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="logo">SportOrca</div>
+    <nav>
+      <a href="#home" onclick="scrollToTop()">HOME</a>
+      <a href="#about" onclick="scrollToSection('about')">ABOUT</a>
+      <a href="#matches" onclick="scrollToSection('matches')">MATCHES</a>
+      <a onclick="openModal('loginModal')">LOGIN</a>
+      <a onclick="openModal('signupModal')">SIGN UP</a>
+    </nav>
+  </header>
+
+  <div class="slideshow" aria-label="Soccer slideshow" height="300">
+    <img src="s1.jpg" alt="Soccer action 1"   class="active" />
+    <img src="s3.jpg" alt="Soccer action 2" />
+    <img src="s4.avif" alt="Soccer stadium" />
+  </div>
+
+  <section id="about" class="about" tabindex="-1">
+    Welcome to SportOrca! ⚽ Dive into thrilling soccer moments. Match updates, stats & love for the game — crafted by fans, for fans.
+  </section>
+
+  <div class="about-cards" aria-label="About images">
+    <div class="about-card" style="background-image: url('s1.jpg');" role="img" aria-label="Soccer ball on grass"></div>
+    <div class="about-card" style="background-image: url('s3.jpg');" role="img" aria-label="Goalkeeper making a save"></div>
+    <div class="about-card" style="background-image: url('s4.avif');" role="img" aria-label="Soccer fans cheering"></div>
+  </div>
+
+  <section id="matches" tabindex="-1">
+    <h2>Match Finder</h2>
+    <div id="matchControls">
+      <select id="yearSelect" aria-label="Select year"></select>
+      <select id="teamSelect" aria-label="Select team">
+        <option value="Barcelona">Barcelona</option>
+        <option value="AC Milan">AC Milan</option>
+        <option value="Viktoria Plzen">Viktoria Plzen</option>
+        <option value="BATE Borisov">BATE Borisov</option>
+      </select>
+      <button onclick="fetchMatches()" aria-live="polite" aria-busy="false">Show Matches</button>
+    </div>
+    <div id="loadingSpinner" role="status" aria-live="polite" aria-label="Loading matches"></div>
+    <div id="matchList" aria-live="polite"></div>
+  </section>
+
+  <!-- Login Modal -->
+  <div id="loginModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="loginTitle" tabindex="-1">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeModal('loginModal')" aria-label="Close login modal">&times;</span>
+      <h2 id="loginTitle">Login</h2>
+      <form id="loginForm" class="form-container" onsubmit="handleLogin(event)">
+        <input type="text" placeholder="Username" required aria-required="true" aria-label="Username" />
+        <input type="password" placeholder="Password" required aria-required="true" aria-label="Password" />
+        <button type="submit" class="submit-btn">Login</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Signup Modal -->
+  <div id="signupModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="signupTitle" tabindex="-1">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeModal('signupModal')" aria-label="Close signup modal">&times;</span>
+      <h2 id="signupTitle">Sign Up</h2>
+      <form id="signupForm" class="form-container" onsubmit="handleSignup(event)">
+        <input type="text" placeholder="Username" required aria-required="true" aria-label="Username" />
+        <input type="email" placeholder="Email" required aria-required="true" aria-label="Email" />
+        <input type="password" placeholder="Password" required aria-required="true" aria-label="Password" />
+        <button type="submit" class="submit-btn">Register</button>
+      </form>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <p>&copy; 2025 SportOrca. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // Populate years dropdown
+    const years = [2011, 2012, 2013, 2014, 2015, 2016];
+    const yearSelect = document.getElementById("yearSelect");
+    years.forEach(yr => {
+      const opt = document.createElement("option");
+      opt.value = yr;
+      opt.textContent = yr;
+      yearSelect.appendChild(opt);
+    });
+
+    // Slideshow functionality
+    const slides = document.querySelectorAll(".slideshow img");
+    let currentSlide = 0;
+    function showSlide(index) {
+      slides.forEach((slide, i) => {
+        slide.classList.toggle("active", i === index);
+      });
+    }
+    setInterval(() => {
+      currentSlide = (currentSlide + 1) % slides.length;
+      showSlide(currentSlide);
+    }, 4000);
+
+    // Scroll helpers
+    function scrollToSection(id) {
+      const el = document.getElementById(id);
+      if (el) {
+        el.focus();
+        el.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+    function scrollToTop() {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Modal controls
+    function openModal(id) {
+      const modal = document.getElementById(id);
+      if (modal) {
+        modal.style.display = "flex";
+        modal.querySelector("input")?.focus();
+        document.body.style.overflow = "hidden"; // prevent background scroll
+      }
+    }
+    function closeModal(id) {
+      const modal = document.getElementById(id);
+      if (modal) {
+        modal.style.display = "none";
+        document.body.style.overflow = ""; // restore scroll
+      }
+    }
+
+    // Close modals on clicking outside content
+    window.onclick = function(event) {
+      const modals = document.querySelectorAll(".modal");
+      modals.forEach(modal => {
+        if (event.target === modal) {
+          closeModal(modal.id);
+        }
+      });
+    };
+
+    // Keyboard: close modals on Escape key
+    document.addEventListener('keydown', function (e) {
+      if (e.key === "Escape") {
+        document.querySelectorAll('.modal').forEach(modal => {
+          if (modal.style.display === "flex") {
+            closeModal(modal.id);
+          }
+        });
+      }
+    });
+
+    // Fetch matches function (mock API call)
+    async function fetchMatches() {
+      const year = yearSelect.value;
+      const team = document.getElementById("teamSelect").value;
+      const matchList = document.getElementById("matchList");
+      const loadingSpinner = document.getElementById("loadingSpinner");
+      const button = document.querySelector("#matchControls button");
+
+      // Clear previous results and show spinner
+      matchList.innerHTML = "";
+      loadingSpinner.style.display = "block";
+      button.disabled = true;
+      button.setAttribute("aria-busy", "true");
+
+      try {
+        // Simulate fetch delay
+        await new Promise(resolve => setTimeout(resolve, 1000));
+
+        // Here you would fetch from your backend API or local JSON file.
+        // For demo, we use mock data:
+        const mockData = [
+          {
+            id: 1,
+            year: "2011",
+            teams: ["Barcelona", "AC Milan"],
+            date: "2011-05-28",
+            venue: "Wembley Stadium",
+            time: "20:45"
+          },
+          {
+            id: 2,
+            year: "2012",
+            teams: ["Chelsea", "Bayern Munich"],
+            date: "2012-05-19",
+            venue: "Allianz Arena",
+            time: "21:00"
+          },
+          {
+            id: 3,
+            year: "2013",
+            teams: ["Borussia Dortmund", "Bayern Munich"],
+            date: "2013-05-25",
+            venue: "Wembley Stadium",
+            time: "20:45"
+          },
+          {
+            id: 4,
+            year: "2015",
+            teams: ["Barcelona", "Juventus"],
+            date: "2015-06-06",
+            venue: "Olympic Stadium",
+            time: "20:45"
+          },
+          {
+            id: 5,
+            year: "2016",
+            teams: ["Real Madrid", "Atletico Madrid"],
+            date: "2016-05-28",
+            venue: "San Siro",
+            time: "20:45"
+          }
+        ];
+
+        // Filter data for selected year and team
+        const filteredMatches = mockData.filter(match =>
+          match.year === year && match.teams.includes(team)
+        );
+
+        if (filteredMatches.length === 0) {
+          matchList.innerHTML = `<p>No matches found for ${team} in ${year}.</p>`;
+        } else {
+          filteredMatches.forEach(match => {
+            const card = document.createElement("div");
+            card.className = "match-card";
+            card.innerHTML = `
+              <strong>${match.teams[0]} vs ${match.teams[1]}</strong>
+              <div class="match-info">Date: ${match.date}</div>
+              <div class="match-info">Venue: ${match.venue}</div>
+              <div class="match-info">Time: ${match.time}</div>
+              <button class="buy-ticket-btn" aria-label="Buy ticket for match ${match.teams[0]} vs ${match.teams[1]} on ${match.date}">Buy Ticket</button>
+            `;
+            const btn = card.querySelector(".buy-ticket-btn");
+            btn.addEventListener("click", () => {
+              btn.disabled = true;
+              btn.textContent = "Thanks for purchasing!";
+              btn.classList.add("thanks-msg");
+            });
+            matchList.appendChild(card);
+          });
+        }
+      } catch (error) {
+        matchList.innerHTML = `<p>Error fetching matches. Please try again later.</p>`;
+        console.error(error);
+      } finally {
+        loadingSpinner.style.display = "none";
+        button.disabled = false;
+        button.setAttribute("aria-busy", "false");
+      }
+    }
+
+    // Login form handler (demo only)
+    function handleLogin(event) {
+      event.preventDefault();
+      alert("Login successful!");
+      closeModal("loginModal");
+    }
+
+    // Signup form handler (demo only)
+    function handleSignup(event) {
+      event.preventDefault();
+      alert("Signup successful!");
+      closeModal("signupModal");
+    }
+  </script>
+
+</body>
+</html>
