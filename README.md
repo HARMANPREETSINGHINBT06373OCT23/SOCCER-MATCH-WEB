@@ -23,8 +23,9 @@ Sure! Here are the **very short steps** without code:
 ---
 
 ### ✅ Usage
-![Screenshot (57)](https://github.com/user-attachments/assets/d336e85b-8bdf-40af-9b68-![Screenshot (56)](https://github.com/user-attachments/assets/4a3b8ab5-2cd2-4558-9aa0-aaa2a96a8d4e)
-a311febbd772)
+[Screenshot (56)](https://github.com/user-attachments/assets/4a3b8ab5-2cd2-4558-9aa0-aaa2a96a8d4e)
+![Screenshot (57)](https://github.com/user-attachments/assets/e28154f1-b25a-4c40-a030-12de2d384a28)
+
 
 * Select year and team → Click "Show Matches".
 * Matches load from live API via backend.
